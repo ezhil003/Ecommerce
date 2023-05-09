@@ -2,6 +2,10 @@ package com.edison.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.edison.entity.Product;
@@ -10,18 +14,21 @@ import com.edison.repo.ProductRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
+@CacheConfig(cacheNames = "products")
 public class ProductService {
 	
 	
     //private final ReviewRepository  reviewRepository;
-	private final ProductRepository productRepository;
+	@Autowired
+	private ProductRepository productRepository;
 	/**
 
 	*Adds a new product to the system or updates an existing product's stock.
 	*@param product The product to be added or updated.
 	*@return The added or updated product.
 	*/
+	@CacheEvict(allEntries = true)
 	public Product addProduct(Product product) {
 		Product prod= productRepository.findByNameAndDescription(product.getName(), product.getDescription());
 		if(prod!=null) {
@@ -61,7 +68,9 @@ public class ProductService {
 	*Retrieves all products from the repository, returning a list of all available products.
 	*@return A list of all products in the system.
 	*/
+    @Cacheable
 	public List<Product> searchProducts() {
+		System.out.println("Calling from DB");
 		return productRepository.findAll();
 	}
     
@@ -72,6 +81,7 @@ public class ProductService {
 	*@return The product with the matching ID, or throws an exception if not found.
 	*@throws NoSuchElementException if the product with the given ID is not found in the repository.
 	*/
+    @Cacheable(key="#id")
     public Product getProductById(Long id) {
 		return productRepository.findById(id).orElseThrow();
 	}
@@ -82,6 +92,7 @@ public class ProductService {
     *@param product The product information to update the existing product.
     *@return The updated product.
     */
+    @CacheEvict(allEntries = true)
 	public Product updateProduct(Long productId, Product product) {
 		Product existingProduct = getProductById(productId);
 		existingProduct.setName(product.getName());
@@ -99,6 +110,7 @@ public class ProductService {
 	*@param stock The new stock value to be set for the product.
 	*@return The updated product with the new stock value.
 	*/
+	@CacheEvict(allEntries = true)
 	public Product updateProductStock(Long productId, int stock) {
 		Product existingProduct = getProductById(productId);
 		existingProduct.setStock(stock);
@@ -109,6 +121,7 @@ public class ProductService {
 	*Deletes a product from the system based on the provided product ID.
 	*@param productId The ID of the product to be deleted.
 	*/
+	@CacheEvict(allEntries = true)
 	public void deleteProduct (Long productId) {
 		productRepository.deleteById(productId);
 	}

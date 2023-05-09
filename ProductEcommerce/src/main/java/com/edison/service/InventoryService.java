@@ -2,6 +2,7 @@ package com.edison.service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class InventoryService {
 		for (Product product : products) {
 			totalStock += product.getStock();
 		}
-		return new InventoryReport(totalProducts, totalStock, products);
+		return new InventoryReport(totalProducts, totalStock, products, null);
 	}
     /**
 
@@ -48,13 +49,13 @@ public class InventoryService {
     *@return An inventory report containing total products, total stock, and a list of products retrieved from the local repository.
     */
 	public InventoryReport generateInventoryReportFallback(Throwable T) {
-		List<Product> products = inventoryRepo.findAll();
-		int totalProducts = products.size();
-		int totalStock = 0;
-		for (Product product : products) {
-			totalStock += product.getStock();
-		}
-		return new InventoryReport(totalProducts, totalStock, products);
+//		List<Product> products = inventoryRepo.findAll();
+//		int totalProducts = products.size();
+//		int totalStock = 0;
+//		for (Product product : products) {
+//			totalStock += product.getStock();
+//		}
+		return new InventoryReport(0, 0,null, "Service Unavailable");
 	}
 
 	/**

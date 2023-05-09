@@ -37,8 +37,8 @@ public class ReviewService {
 	    Product product = productOptional.get();
 	    review.setUserId(review.getUserId());
 	    product.getReviews().add(review);
-	    review.setProdId(product);
-	    productRepository.save(product);
+	    //review.setProdId(product);
+	    //productRepository.save(product);
 	    return reviewRepository.save(review);
 	}
 	
@@ -59,7 +59,7 @@ public class ReviewService {
 	    reviewOptional.setRating(review.getRating());
 //	    reviewOptional.setProdId(review.getProdId());
 //	    reviewOptional.setUserId(review.getUserId());
-	    review.setProdId(product);
+	    //review.setProdId(product);
 	    review.getUserId();
 //	    productRepository.save(product);
 	    Review updatedreview = reviewRepository.save(reviewOptional);
@@ -80,7 +80,8 @@ public class ReviewService {
 	        throw new IllegalArgumentException("Product not found with id " + productId);
 	    }
 	    //Product product = productOptional.get();
-	    return reviewRepository.findById(productId);
+	    return reviewRepository.findByProdId(productId);
+	    //return reviewRepository.findById(productId);
 	}
 }
 

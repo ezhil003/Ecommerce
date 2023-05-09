@@ -14,10 +14,20 @@ import lombok.NoArgsConstructor;
 
 public class InventoryReport {
 	
+
+
+
+
+	public InventoryReport(String string) {
+		// TODO Auto-generated constructor stub
+	}
+
 	private int totalProducts;
 
 	private int totalStock;
 	
 	private List<Product> products;
+	
+	private String fallbackMessage;
 
 }
